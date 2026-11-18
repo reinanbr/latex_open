@@ -253,6 +253,6 @@ O texdesk é uma implementação original. Ele reproduz a ergonomia de editores 
 
 ## Licença
 
-Defina uma licença antes de distribuir.
+Distribuído sob a [licença MIT](LICENSE).
 
-O estilo de citação ABNT embutido (`internal/export/csl/associacao-brasileira-de-normas-tecnicas.csl`) vem do [Citation Style Language](https://github.com/citation-style-language/styles) e é distribuído sob a licença [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), com os créditos aos autores no próprio arquivo.
+Exceção: o estilo de citação ABNT embutido (`internal/export/csl/associacao-brasileira-de-normas-tecnicas.csl`) vem do [Citation Style Language](https://github.com/citation-style-language/styles) e é distribuído sob a licença [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), com os créditos aos autores no próprio arquivo.
