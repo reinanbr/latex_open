@@ -1,0 +1,11 @@
+[0] Config.pm:328> INFO - This is Biber 2.21
+[0] Config.pm:331> INFO - Logfile is '/data/projects/P/build/main.blg'
+[203] biber:342> INFO - === Fri Nov 13, 2026, 11:34:34
+[246] Biber.pm:421> INFO - Reading '/data/projects/P/build/main.bcf'
+[336] Biber.pm:1002> INFO - Found 2 citekeys in bib section 0
+[356] Biber.pm:4487> INFO - Processing section 0
+[371] Biber.pm:4678> INFO - Looking for bibtex file 'refs.bib' for section 0
+[372] bibtex.pm:1713> INFO - LaTeX decoding ...
+[375] bibtex.pm:1519> INFO - Found BibTeX data source 'refs.bib'
+[417] Utils.pm:468> ERROR - BibTeX subsystem: /tmp/biber_tmp_57VI/8fe4c9854184545302f21ebf0d47516c_20390.utf8, line 7, syntax error: found "@book", expected end of entry ("}" or ")") (skipping to next "@")
+[417] Biber.pm:137> INFO - ERRORS: 1

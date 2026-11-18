@@ -1,0 +1,148 @@
+.pdf-scroll { position: relative; flex: 1; min-height: 0; width: 100%; overflow: auto; background: var(--pdf-bg); }
+.pdf-pages { display: flex; flex-direction: column; align-items: center; width: max-content; min-width: 100%; box-sizing: border-box; }
+.pdf-page { position: relative; flex: none; background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+.pdf-canvas, .pdf-text { position: absolute; inset: 0; }
+.pdf-canvas canvas { display: block; }
+.pdf-message { padding: 24px; color: #fff; text-align: center; }
+
+.pdf-highlight {
+  position: absolute; z-index: 3; pointer-events: none; border-radius: 3px;
+  background: var(--sync-highlight); outline: 2px solid rgba(230, 160, 0, 0.9);
+  animation: pdf-flash 2.5s ease-out forwards;
+}
+@keyframes pdf-flash { 0%, 60% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Text layer (selectable, invisible text over the canvas). Rules follow the
+   positioning variables set by pdf.js's TextLayer. */
+.textLayer {
+  position: absolute; inset: 0; overflow: clip; opacity: 1; line-height: 1;
+  text-align: initial; letter-spacing: normal; word-spacing: normal;
+  text-size-adjust: none; forced-color-adjust: none; transform-origin: 0 0; z-index: 1;
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+}
+.textLayer :is(span, br) {
+  color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%;
+}
+.textLayer > :not(.markedContent), .textLayer .markedContent span:not(.markedContent) {
+  --font-height: 0;
+  --scale-x: 1;
+  --rotate: 0deg;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+.textLayer .markedContent { display: contents; }
+.textLayer ::selection { background: rgba(0, 90, 220, 0.3); }
+.textLayer br::selection { background: transparent; }
+.textLayer .endOfContent { display: block; position: absolute; inset: 100% 0 0; z-index: 0; cursor: default; user-select: none; }
+
+/* ---------- PDF pane ---------- */
+.pdf-pane { background: var(--pdf-bg); }
+.pdf-toolbar {
+  display: flex; align-items: center; gap: 4px; height: 40px; padding: 0 8px; flex: none;
+  background: var(--chrome-bg-2); color: var(--chrome-text); border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
+}
+.pdf-toolbar .spacer { flex: 1; min-width: 4px; }
+.pdf-toolbar .icon-btn { color: var(--chrome-text); position: relative; flex: none; }
+.pdf-toolbar .icon-btn:hover:not(:disabled), .pdf-toolbar .btn-ghost:hover { background: var(--chrome-hover); }
+.pdf-toolbar .icon-btn.active { background: var(--chrome-hover); }
+.pdf-toolbar .icon-btn.disabled { opacity: 0.4; pointer-events: none; }
+.pdf-toolbar .btn-ghost { color: var(--chrome-text); }
+.toolbar-sep { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.15); margin: 0 4px; flex: none; }
+.split-btn { display: inline-flex; flex: none; }
+.split-btn .recompile { border-top-right-radius: 0; border-bottom-right-radius: 0; min-width: 132px; }
+.split-btn .split-caret { border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0 6px; border-left: 1px solid rgba(255, 255, 255, 0.25); }
+.badge {
+  position: absolute; top: 0; right: -2px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px;
+  font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; color: #fff;
+}
+.badge.error { background: var(--danger); }
+.badge.warning { background: var(--warning); }
+.pager { display: inline-flex; align-items: center; gap: 2px; flex: none; }
+.page-input { width: 36px; height: 24px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 4px; background: rgba(0, 0, 0, 0.2); color: var(--chrome-text); font-size: 12px; }
+.pager .of { font-size: 12px; color: var(--chrome-muted); margin: 0 2px; white-space: nowrap; }
+.zoom-label { min-width: 54px; font-size: 12px; }
+.pdf-body { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.pdf-empty { flex: 1; display: grid; place-items: center; color: #fff; text-align: center; padding: 24px; }
+.pdf-empty p { display: inline-flex; align-items: center; gap: 8px; max-width: 420px; }
+.compiling-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; overflow: hidden; background: transparent; }
+.compiling-bar::after { content: ""; position: absolute; inset: 0; width: 30%; background: var(--accent); animation: slide 1.1s ease-in-out infinite; }
+@keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+
+/* ---------- Logs panel ---------- */
+.logs-panel { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; background: var(--bg); color: var(--text); }
+.logs-head { display: flex; align-items: center; gap: 8px; padding: 0 6px 0 8px; height: 38px; flex: none; border-bottom: 1px solid var(--border); background: var(--bg-subtle); }
+.logs-head .spacer { flex: 1; }
+.logs-tabs { display: flex; height: 100%; }
+.logs-tabs button { border: 0; background: none; padding: 0 12px; cursor: pointer; color: var(--text-muted); font-weight: 600; border-bottom: 2px solid transparent; }
+.logs-tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+.logs-tabs .count { font-weight: 500; color: var(--text-faint); margin-left: 4px; }
+.logs-status { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.logs-status.success { color: var(--accent); }
+.logs-status.error, .logs-status.timeout { color: var(--danger); }
+.logs-body { flex: 1; min-height: 0; overflow: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.logs-empty { display: flex; align-items: center; gap: 8px; color: var(--text-muted); padding: 16px 4px; }
+.problem-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--border); background: var(--bg); border-radius: 999px; padding: 2px 10px; font-size: 12px; cursor: pointer; color: var(--text-muted); }
+.chip span { font-weight: 700; margin-left: 2px; }
+.chip.active { border-color: var(--text-muted); color: var(--text); background: var(--bg-muted); }
+.chip.error span { color: var(--danger); }
+.chip.warning span { color: var(--warning); }
+.chip:disabled { opacity: 0.5; cursor: default; }
+.problem { border: 1px solid var(--border); border-left: 4px solid var(--info); border-radius: var(--radius); background: var(--bg); overflow: hidden; flex: none; }
+.problem.error { border-left-color: var(--danger); }
+.problem.warning { border-left-color: var(--warning); }
+.problem.typesetting { border-left-color: var(--typeset); }
+.problem-head { display: flex; align-items: flex-start; gap: 8px; width: 100%; padding: 8px 10px; border: 0; background: none; text-align: left; cursor: pointer; color: inherit; }
+.problem-head:hover { background: var(--bg-hover); }
+.problem.error .problem-head > .icon { color: var(--danger); }
+.problem.warning .problem-head > .icon { color: var(--warning); }
+.problem.typesetting .problem-head > .icon { color: var(--typeset); }
+.problem-head > .icon { margin-top: 2px; }
+.problem-msg { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.problem-loc { font: 12px var(--font-mono); color: var(--text-muted); white-space: nowrap; margin-left: 8px; }
+.problem-loc.link { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.raw-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; color: var(--text-faint); font-size: 12px; cursor: pointer; padding: 0 10px 6px 30px; }
+.raw-toggle .icon { width: 12px; height: 12px; }
+.problem-raw { margin: 0; padding: 8px 10px; font: 12px/1.45 var(--font-mono); background: var(--bg-subtle); border-top: 1px solid var(--border); white-space: pre-wrap; overflow-wrap: anywhere; max-height: 260px; overflow: auto; }
+.logs-body.raw { padding: 0; gap: 0; }
+.raw-actions { display: flex; justify-content: flex-end; padding: 6px 8px; border-bottom: 1px solid var(--border); flex: none; }
+.raw-log { margin: 0; padding: 10px 12px; font: 12px/1.45 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.latexmk-output summary { cursor: pointer; padding: 8px 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+/* Editor problem hints in the log list */
+.problem-hint { margin: -2px 10px 8px 32px; padding: 6px 9px; border-radius: 6px; background: var(--bg-subtle); color: var(--text-muted); font-size: 12.5px; line-height: 1.45; }
+.problem.flash { animation: problem-flash 1.6s ease-out; }
+@keyframes problem-flash { 0%, 40% { box-shadow: 0 0 0 3px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+/* Pop-up over the PDF after a compilation with errors */
+.compile-alert {
+  position: absolute; top: 12px; right: 12px; z-index: 5; width: min(420px, calc(100% - 24px));
+  background: var(--bg); color: var(--text); border: 1px solid var(--border); border-top: 3px solid var(--danger);
+  border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); padding: 8px 10px 10px; font-size: 13px;
+  animation: alert-in 0.18s ease-out;
+}
+@keyframes alert-in { from { opacity: 0; transform: translateY(-6px); } }
+.compile-alert-head { display: flex; align-items: center; gap: 6px; }
+.compile-alert-head > .icon { color: var(--danger); }
+.compile-alert-head .muted { color: var(--text-muted); }
+.compile-alert-msg { margin: 6px 0 0; overflow-wrap: anywhere; line-height: 1.45; }
+.compile-alert-loc { display: block; font: 12px var(--font-mono); color: var(--text-muted); margin-bottom: 2px; }
+.compile-alert-hint { margin-top: 6px; padding: 6px 8px; border-radius: 6px; background: var(--bg-subtle); color: var(--text-muted); font-size: 12.5px; line-height: 1.45; }
+.compile-alert-actions { display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+.compile-alert-actions .muted { color: var(--text-muted); font-size: 12px; }
+.compile-menu { min-width: 260px; }
+
+/* Live check section of the logs */
+.live-section { display: flex; flex-direction: column; gap: 6px; flex: none; }
+.live-note { font-size: 12px; padding: 0 2px; }
+.logs-section-title { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-top: 2px; }
+.logs-section-title .muted { margin-left: auto; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--text-faint); }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 var(--accent); animation: live-pulse 2s ease-out infinite; }
+@keyframes live-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); } 70%, 100% { box-shadow: 0 0 0 6px transparent; } }
+.problem.live { border-style: dashed; border-left-style: solid; }
+.logs-updating { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); margin-right: 8px; }
+.auto-paused { display: inline-flex; align-items: center; gap: 4px; flex: none; font-size: 12px; color: var(--chrome-text); opacity: 0.85; padding: 2px 8px; border-radius: 10px; background: var(--chrome-hover); white-space: nowrap; }
+.auto-paused .icon { width: 13px; height: 13px; color: var(--warning); }

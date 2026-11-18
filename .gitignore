@@ -1,0 +1,17 @@
+# build outputs
+/bin/
+/tmp/
+/web/dist/
+/web/node_modules/
+
+# local data (user projects, compile output)
+/data/
+
+# stray downloads
+*.deb
+
+# editors / OS
+.DS_Store
+*.swp
+.vscode/
+.idea/

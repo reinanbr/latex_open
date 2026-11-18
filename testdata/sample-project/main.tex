@@ -1,0 +1,27 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{Projeto de Exemplo do texdesk}
+\author{Equipe texdesk}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Este documento de exemplo exercita \verb|\input|, \verb|\include|, figuras,
+referências cruzadas e bibliografia com Bib\TeX.
+\end{abstract}
+
+\input{chapters/intro}
+\include{chapters/methods}
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

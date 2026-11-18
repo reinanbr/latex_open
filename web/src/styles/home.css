@@ -1,0 +1,36 @@
+.home { min-height: 100%; display: flex; flex-direction: column; background: var(--bg-subtle); }
+.home-main { width: min(1040px, 100%); margin: 0 auto; padding: 28px 16px 48px; }
+.home-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.home-head h1 { margin: 0; font-size: 22px; flex: 1; }
+
+.dropzone {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  min-height: 190px; padding: 28px 16px; margin-bottom: 28px;
+  border: 2px dashed var(--border-strong); border-radius: 14px;
+  background: var(--bg); color: var(--text-muted); text-align: center;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.dropzone:hover { border-color: var(--accent); }
+.dropzone.dragging { border-color: var(--accent); background: var(--bg-active); color: var(--text); }
+.dropzone .dz-icon { width: 44px; height: 44px; color: var(--accent); }
+.dropzone strong { color: var(--text); font-size: 16px; }
+.dropzone .progress { width: min(360px, 80%); height: 6px; border-radius: 3px; background: var(--bg-muted); overflow: hidden; }
+.dropzone .progress > div { height: 100%; background: var(--accent); transition: width 0.15s; }
+
+.project-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.project-table th, .project-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.project-table th { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; background: var(--bg-subtle); }
+.project-table tr:last-child td { border-bottom: 0; }
+.project-table tbody tr:hover { background: var(--bg-hover); }
+.project-table .name-cell { font-weight: 600; }
+.project-table .name-cell a { color: var(--text); text-decoration: none; }
+.project-table .name-cell a:hover { color: var(--accent); text-decoration: underline; }
+.project-table .sub { display: block; font-weight: 400; font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+.project-table .actions { display: flex; gap: 2px; justify-content: flex-end; }
+.project-table .col-date { white-space: nowrap; color: var(--text-muted); width: 1%; }
+.project-table .col-actions { width: 1%; }
+
+@media (max-width: 640px) {
+  .project-table .col-date { display: none; }
+  .project-table th, .project-table td { padding: 10px; }
+}
